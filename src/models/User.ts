@@ -5,8 +5,9 @@ export interface IUser extends Document {
   email: string;
   phone: string;
   password: string;
-  role: "visitor" | "student" | "teacher" | "parent";
+  role: "visitor" | "student" | "teacher" | "parent" | "admin";
   agreeTerms: boolean;
+  isAdmin: boolean;
 }
 
 const userSchema = new mongoose.Schema(
@@ -17,10 +18,11 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: ["visitor", "student", "teacher", "parent"],
+      enum: ["visitor", "student", "teacher", "parent", "admin"],
       default: "visitor"
     },
-    agreeTerms: { type: Boolean, default: false }
+    agreeTerms: { type: Boolean, default: false },
+    isAdmin: { type: Boolean, default: false }
   },
   { timestamps: true }
 );

@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import safetyRoutes from './routes/safetyRoutes';
 import authRoutes from './routes/authRoutes';
 import volunteerRoutes from './routes/volunteerRoutes';
+import adminRoutes from './routes/adminRoutes';
 import { logger } from './middleware/logger';
 import connectDB from './config/db';
 
@@ -27,6 +28,7 @@ app.use(logger); // Request logging
 app.use('/api/auth', authRoutes);
 app.use('/api', safetyRoutes);
 app.use('/api/volunteers', volunteerRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({

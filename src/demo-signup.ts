@@ -26,10 +26,19 @@ const demoUsers = [
     confirmPassword: "teacherPass789",
     role: "teacher",
     agreeTerms: true
+  },
+  {
+    fullName: "Admin User",
+    email: "admin@school.edu",
+    phone: "+1555000000",
+    password: "adminPassword123",
+    confirmPassword: "adminPassword123",
+    role: "admin",
+    agreeTerms: true
   }
 ];
 
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = 'http://localhost:3000';
 
 const demoSignup = async () => {
   console.log('Starting signup demo...\n');
@@ -57,6 +66,7 @@ const demoSignup = async () => {
       console.log(`  ID: ${data.user.id}`);
       console.log(`  Name: ${data.user.fullName}`);
       console.log(`  Email: ${data.user.email}`);
+      console.log(`  Role: ${data.user.role}`);
       console.log(`  Token: ${data.token.substring(0, 30)}...\n`);
     } catch (error: any) {
       if (error.message) {
@@ -68,6 +78,8 @@ const demoSignup = async () => {
   }
   
   console.log('Demo completed.');
+  console.log('\nTo make a user an admin, run:');
+  console.log('npm run make-admin admin@school.edu\n');
 };
 
 demoSignup();
