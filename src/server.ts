@@ -20,7 +20,10 @@ const PORT = process.env.PORT || "3000";
 
 // Middleware
 app.use(helmet()); // Security headers
-app.use(cors()); // Enable CORS
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:5173'], // Allow frontend origins
+  credentials: true
+})); // Enable CORS with specific origins
 app.use(express.json()); // Parse JSON bodies
 app.use(logger); // Request logging
 

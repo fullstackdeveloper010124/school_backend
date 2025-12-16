@@ -8,28 +8,33 @@ import {
   checkInVolunteer,
   checkOutVolunteer
 } from "../controllers/volunteerController";
+import { auth } from "../middleware/auth";
+import { adminAuth } from "../middleware/adminAuth";
 
 const router = Router();
 
-// GET /api/volunteers - Get all volunteers
-router.get("/", getAllVolunteers);
+// Apply auth middleware to all routes
+router.use(auth);
 
-// GET /api/volunteers/:id - Get volunteer by ID
-router.get("/:id", getVolunteerById);
+// GET /api/volunteers - Get all volunteers (admin only)
+router.get("/", adminAuth, getAllVolunteers);
 
-// POST /api/volunteers - Create new volunteer
-router.post("/", createVolunteer);
+// GET /api/volunteers/:id - Get volunteer by ID (admin only)
+router.get("/:id", adminAuth, getVolunteerById);
 
-// PUT /api/volunteers/:id - Update volunteer
-router.put("/:id", updateVolunteer);
+// POST /api/volunteers - Create new volunteer (admin only)
+router.post("/", adminAuth, createVolunteer);
 
-// DELETE /api/volunteers/:id - Delete volunteer
-router.delete("/:id", deleteVolunteer);
+// PUT /api/volunteers/:id - Update volunteer (admin only)
+router.put("/:id", adminAuth, updateVolunteer);
 
-// PUT /api/volunteers/:id/checkin - Check-in volunteer
-router.put("/:id/checkin", checkInVolunteer);
+// DELETE /api/volunteers/:id - Delete volunteer (admin only)
+router.delete("/:id", adminAuth, deleteVolunteer);
 
-// PUT /api/volunteers/:id/checkout - Check-out volunteer
-router.put("/:id/checkout", checkOutVolunteer);
+// PUT /api/volunteers/:id/checkin - Check-in volunteer (admin only)
+router.put("/:id/checkin", adminAuth, checkInVolunteer);
+
+// PUT /api/volunteers/:id/checkout - Check-out volunteer (admin only)
+router.put("/:id/checkout", adminAuth, checkOutVolunteer);
 
 export default router;

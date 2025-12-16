@@ -7,7 +7,7 @@ import Incident from '../models/Incident';
 export const getPendingApprovals = async (req: Request, res: Response): Promise<void> => {
   try {
     // Get pending users (visitors waiting for role approval)
-    const pendingUsers = await User.find({ role: 'visitor' }).select('-password');
+    const pendingUsers = await User.find({ isApproved: false, role: { $ne: "admin" } }).select('-password');
     
     // Get pending volunteers
     const pendingVolunteers = await Volunteer.find({ status: 'pending_approval' });
@@ -21,6 +21,26 @@ export const getPendingApprovals = async (req: Request, res: Response): Promise<
         pendingUsers,
         pendingVolunteers,
         pendingIncidents
+      }
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// Get all users (for admin dashboard)
+export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Get all users (including admins)
+    const users = await User.find({}).select('-password');
+    
+    res.status(200).json({
+      success: true,
+      data: {
+        users
       }
     });
   } catch (error: any) {
@@ -64,6 +84,7 @@ export const updateUserRoleStatus = async (req: Request, res: Response): Promise
     if (action === 'approve') {
       // Approve user and assign role
       user.role = newRole || 'visitor'; // Default to visitor if no role specified
+      user.isApproved = true; // Mark user as approved
       await user.save();
       
       res.status(200).json({

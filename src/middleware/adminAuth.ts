@@ -23,7 +23,13 @@ export const adminAuth = async (req: Request, res: Response, next: NextFunction)
 
     // Check if user exists and is admin
     const user = await User.findById(decoded.id);
-    if (!user || !user.isAdmin) {
+    if (!user) {
+      res.status(401).json({ message: 'Access denied. User not found.' });
+      return;
+    }
+    
+    // Allow access if user is admin OR has admin role
+    if (!user.isAdmin && user.role !== 'admin') {
       res.status(403).json({ message: 'Access denied. Admin rights required.' });
       return;
     }

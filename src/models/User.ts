@@ -8,6 +8,7 @@ export interface IUser extends Document {
   role: "visitor" | "student" | "teacher" | "parent" | "admin";
   agreeTerms: boolean;
   isAdmin: boolean;
+  isApproved: boolean;
 }
 
 const userSchema = new mongoose.Schema(
@@ -22,7 +23,8 @@ const userSchema = new mongoose.Schema(
       default: "visitor"
     },
     agreeTerms: { type: Boolean, default: false },
-    isAdmin: { type: Boolean, default: false }
+    isAdmin: { type: Boolean, default: false },
+    isApproved: { type: Boolean, default: false }
   },
   { timestamps: true }
 );

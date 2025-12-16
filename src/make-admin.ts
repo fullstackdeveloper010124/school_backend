@@ -17,8 +17,10 @@ const makeAdmin = async (email: string) => {
       process.exit(1);
     }
     
+    // Set both isAdmin flag and role to admin for backward compatibility
     user.isAdmin = true;
     user.role = 'admin';
+    user.isApproved = true; // Ensure admin users are approved
     await user.save();
     
     console.log(`User ${user.email} has been made an admin`);

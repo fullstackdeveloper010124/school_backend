@@ -2,6 +2,7 @@ import express from 'express';
 import { adminAuth } from '../middleware/adminAuth';
 import {
   getPendingApprovals,
+  getAllUsers,
   updateUserRoleStatus,
   updateVolunteerStatus,
   updateIncidentStatus
@@ -14,6 +15,9 @@ router.use(adminAuth);
 
 // Get all pending approvals
 router.get('/approvals/pending', getPendingApprovals);
+
+// Get all users
+router.get('/users', getAllUsers);
 
 // Update user role status (approve/reject)
 router.put('/users/status', updateUserRoleStatus);

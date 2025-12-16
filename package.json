@@ -8,7 +8,9 @@
     "dev": "nodemon src/server.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "make-admin": "ts-node src/make-admin.ts"
+    "make-admin": "ts-node src/make-admin.ts",
+    "init-demo": "ts-node src/initialize-demo-data.ts",
+    "verify-data": "ts-node src/verify-data.ts"
   },
   "keywords": [
     "school",

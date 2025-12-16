@@ -10,6 +10,7 @@ interface IUser {
   email: string;
   phone: string;
   role: string;
+  isAdmin: boolean;
 }
 
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
@@ -33,7 +34,9 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
       phone,
       password: hashedPassword,
       role: role || "visitor",
-      agreeTerms: agreeTerms || false
+      agreeTerms: agreeTerms || false,
+      // Add a field to track if the user is approved by admin
+      isApproved: false
     });
 
     const savedUser = await user.save();
@@ -46,24 +49,17 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
       return;
     }
 
-    const token = jwt.sign(
-      { id: savedUser._id, role: savedUser.role },
-      jwtSecret,
-      { expiresIn: "7d" }
-    );
-
     console.log('User registered successfully:', savedUser._id);
     
     res.status(201).json({
-      message: "User registered successfully",
+      message: "User registered successfully. Waiting for admin approval.",
       user: {
         id: savedUser._id,
         fullName: savedUser.fullName,
         email: savedUser.email,
         phone: savedUser.phone,
         role: savedUser.role
-      },
-      token
+      }
     });
   } catch (error: any) {
     console.error('Error during user registration:', error);
@@ -88,6 +84,13 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     if (!user) {
       console.log('Login failed: User not found with email:', email);
       res.status(401).json({ message: "Invalid email or password" });
+      return;
+    }
+
+    // Check if user is approved by admin (unless they are an admin)
+    if (!user.isApproved && user.role !== "admin" && !user.isAdmin) {
+      console.log('Login failed: User not approved by admin:', email);
+      res.status(401).json({ message: "Account pending admin approval" });
       return;
     }
 
@@ -126,7 +129,8 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         fullName: user.fullName,
         email: user.email,
         phone: user.phone,
-        role: user.role
+        role: user.role,
+        isAdmin: user.isAdmin
       },
       token
     });

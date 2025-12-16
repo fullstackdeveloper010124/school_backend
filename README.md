@@ -10,12 +10,13 @@ This is the backend API for a school safety system built with Node.js, Express, 
 - Incident reporting and management
 - Volunteer management with check-in/check-out functionality
 - Admin dashboard for approving/rejecting users and volunteers
+- User approval system requiring admin authorization before login
 
 ## API Endpoints
 
 ### Authentication
 - `POST /api/auth/signup` - User registration
-- `POST /api/auth/login` - User login
+- `POST /api/auth/login` - User login (requires admin approval for non-admin users)
 - `POST /api/auth/forgot-password` - Request password reset
 - `POST /api/auth/reset-password` - Reset password
 
@@ -35,6 +36,7 @@ This is the backend API for a school safety system built with Node.js, Express, 
 
 ### Admin (requires admin authentication)
 - `GET /api/admin/approvals/pending` - Get all pending approvals
+- `GET /api/admin/users` - Get all users
 - `PUT /api/admin/users/status` - Approve/reject user role
 - `PUT /api/admin/volunteers/status` - Approve/reject volunteer
 - `PUT /api/admin/incidents/status` - Update incident status
@@ -43,19 +45,30 @@ This is the backend API for a school safety system built with Node.js, Express, 
 The system includes an admin dashboard with the following capabilities:
 
 1. View all pending approvals:
-   - New user registrations with "visitor" role awaiting approval
+   - New user registrations awaiting approval
    - Volunteer applications awaiting approval
 
-2. Approve or reject users:
+2. View all users:
+   - See all registered users and their approval status
+   - Manage user roles and permissions
+
+3. Approve or reject users:
    - Assign appropriate roles (student, teacher, parent) to visitors
    - Reject and remove inappropriate registrations
 
-3. Manage volunteers:
+4. Manage volunteers:
    - Approve volunteer applications
    - Reject volunteer applications
 
-4. Update incident statuses:
+5. Update incident statuses:
    - Change incident status from "Reported" to "In Progress", "Completed", or "Cancelled"
+
+## User Approval Workflow
+1. Users sign up through the registration form
+2. New users are marked as "pending approval" in the system
+3. Admins review pending users through the admin dashboard
+4. Admins either approve (granting access) or reject (removing) users
+5. Approved users can then log in to the system
 
 ## Setup
 1. Clone the repository
@@ -67,6 +80,23 @@ The system includes an admin dashboard with the following capabilities:
 To make a user an admin, use the following command:
 ```
 npm run make-admin user@example.com
+```
+
+## Initializing Demo Data
+To initialize the database with sample data for testing the admin approval system:
+```
+npm run init-demo
+```
+
+This will populate the database with:
+- Sample users with different roles (admin, visitor, student, teacher)
+- Sample volunteers with different statuses (pending, active, inactive)
+- Sample incidents with different statuses (reported, in progress, completed)
+
+## Verifying Database Content
+To verify that all data has been properly set in the database:
+```
+npm run verify-data
 ```
 
 ## Demo
